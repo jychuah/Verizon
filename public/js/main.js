@@ -1,3 +1,6 @@
+/*******
+* How to dynamically spawn elements and fill them
+********/
 // Load a sample element into a div that we can copy
 var templateDiv = create("elements/sample.html");
 // The div needs to have the "row" class, so we add that manually
