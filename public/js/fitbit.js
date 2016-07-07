@@ -21,6 +21,33 @@ var fitbit = {
     }
   },
 
+  request : function(req, callback) {
+    if (!(this.isAuth() && req.url && req.method)) {
+      callback(null);
+      return false;
+    }
+    var fitbitReq = { };
+    fitbitReq.url = "https://api.fitbit.com/1/user/" + this.auth.user_id + req.url;
+    fitbitReq.method = req.method;
+    fitbitReq.headers = {
+      "Authorization" : "Bearer " + this.auth.access_token
+    };
+    fitbitReq.async = true;
+    if (req.postData) {
+      fitbitReq.data = req.postData;
+    }
+    fitbitReq.complete = function(data, textStatus) {
+      if (callback) {
+        if (data.status == 200) {
+          callback(data.responseJSON);
+        } else {
+          callback({ error : textStatus });
+        }
+      }
+    };
+    $.ajax(fitbitReq);
+  },
+
   checkAuth : function() {
     var params = {}, queryString = location.hash.substring(1),
     regex = /([^&=]+)=([^&]*)/g, m;
@@ -28,12 +55,12 @@ var fitbit = {
       params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
     }
     for (var key in params) {
-      auth[key] = params[key];
+      this.auth[key] = params[key];
     }
   },
 
   isAuth : function() {
-    if (auth.access_token) {
+    if (this.auth.access_token) {
       return true;
     }
   }

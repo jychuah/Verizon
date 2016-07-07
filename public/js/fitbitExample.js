@@ -28,4 +28,25 @@ $(document).ready(function() {
     // Set the URL on the authorization button
     $("#fitbitAuth").attr('href', fitbit.getURL());
   }
+
+  // Request information. The URL is always everything after the
+  // user ID. For example, we are requesting a user's
+  // device data. The resource, as listed in the documentation
+  // at https://dev.fitbit.com/docs/devices/#get-devices says
+  // the resource is:
+  //
+  // GET https://api.fitbit.com/1/user/-/devices.json
+  //
+  // Therefore, the url is "/devices.json" and the method
+  // is "GET"
+  var req = {
+    url : "/devices.json",
+    method : "GET",
+  };
+
+  // Send the request, with a callback that processes the
+  // responseJSON
+  fitbit.request(req, function(responseJSON) {
+    console.log(responseJSON);
+  });
 });
